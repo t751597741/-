@@ -1,57 +1,51 @@
-# React + TypeScript + Vite
+# 书法作品视频生成器
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+一个基于 React + TypeScript + Vite 的书法视频生成平台，支持上传作品、去除背景、选择或生成画框、生成国风音乐，并导出带动效的视频。
 
-Currently, two official plugins are available:
+## 功能概览
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 上传书法图片并进行背景去除
+- 选择内置画框、导入画框或通过提示词生成画框
+- 调整画面比例：`9:16`、`16:9`、`1:1`
+- 调整原图大小、位置、旋转和画框大小
+- 生成音乐并保留历史音乐库
+- 基于实时预览导出 15 秒视频
 
-## Expanding the ESLint configuration
+## 技术栈
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- React 18
+- TypeScript
+- Vite
+- Zustand
+- Tailwind CSS
+- FFmpeg.wasm
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## 本地启动
+
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 构建与检查
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  extends: [
-    // other configs...
-    // Enable lint rules for React
-    reactX.configs['recommended-typescript'],
-    // Enable lint rules for React DOM
-    reactDom.configs.recommended,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```bash
+npm run check
+npm run build
 ```
+
+## 目录结构
+
+```text
+src/
+  components/   页面组件
+  pages/        页面入口
+  services/     图片与视频处理逻辑
+  store/        Zustand 状态管理
+  data/         内置画框和音乐数据
+```
+
+## 说明
+
+- 首次安装依赖后会自动复制 `ffmpeg-core` 到 `public/ffmpeg/`
+- 如果 MP4 转码失败，前端会尝试回退为可预览的 WebM
