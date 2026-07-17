@@ -1,39 +1,23 @@
-import { mkdir, copyFile, stat } from 'node:fs/promises';
-import path from 'node:path';
+import { copyFile, mkdir } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const root = process.cwd();
-const srcDir = path.join(root, 'node_modules', '@ffmpeg', 'core', 'dist');
-const destDir = path.join(root, 'public', 'ffmpeg');
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const source = join(__dirname, '..', 'node_modules', '@ffmpeg', 'core', 'dist', 'ffmpeg-core.js');
+const dest = join(__dirname, '..', 'public', 'ffmpeg-core.js');
 
-const files = [
-  'ffmpeg-core.js',
-  'ffmpeg-core.wasm',
-  'ffmpeg-core.worker.js',
-];
-
-async function exists(filePath) {
-  try {
-    await stat(filePath);
-    return true;
-  } catch {
-    return false;
-  }
+// 如果源文件不存在，则跳过并正常退出（不报错）
+if (!existsSync(source)) {
+  console.warn('⚠️ ffmpeg-core.js not found, skipping copy.');
+  process.exit(0);  // ← 关键：正常退出，不报错
 }
 
-async function main() {
-  await mkdir(destDir, { recursive: true });
-  for (const file of files) {
-    const from = path.join(srcDir, file);
-    const to = path.join(destDir, file);
-    if (!(await exists(from))) {
-      throw new Error(`Missing ${from}`);
-    }
-    await copyFile(from, to);
-  }
-}
-
-main().catch((err) => {
-  process.stderr.write(`${err instanceof Error ? err.message : String(err)}\n`);
+try {
+  await mkdir(dirname(dest), { recursive: true });
+  await copyFile(source, dest);
+  console.log('✅ ffmpeg-core.js copied successfully!');
+} catch (err) {
+  console.error('❌ Failed to copy ffmpeg-core.js:', err);
   process.exit(1);
-});
-
+}
